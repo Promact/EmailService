@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>Promact.EmailService.SES</PackageId>
+    <Authors>Rushi Soni</Authors>
+    <Product>Promact.EmailService.SES</Product>
+    <Company>Promact Infotech Private Limited</Company>
+    <Description>Email service implementation for sending emails via SES</Description>
+    <RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
