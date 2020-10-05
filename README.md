@@ -11,6 +11,8 @@ public async Task MyMethod()
     var mailMessage = new Mail();
     mail.From = "abc@pqr.com";
     mail.To = new List<string>(){"xyz@domain.com", "lmn@domain.com"};
+    mail.CC = new List<string>(){"xyz1@domain.com", "lmn1@domain.com"};
+    mail.BCC = new List<string>(){"xyz2@domain.com", "lmn2@domain.com"};
     mail.Subject = "Test subject";
     mail.Body = "Test body";
     mail.IsBodyHTML = true;
@@ -109,3 +111,8 @@ Create new object of SendGridEmailService passing relevant configuration values
 ```
 var emailService = new SendGridEmailService(new SendGridOptions(){ });
 ```
+
+#TODO
+- Add attachment support
+- Add Generic SMTP Email service support (Mailkit/System.NET)
+- Setup Github Actions
