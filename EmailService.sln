@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{BFA28057-EEBA-4B08-98C4-83B2DAA4EE7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SES", "SESEmailService\EmailService.SES.csproj", "{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SES", "EmailService.SES\EmailService.SES.csproj", "{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SESEmailService.Test", "SESEmailService.Test\SESEmailService.Test.csproj", "{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SendGrid", "SendGridEmailService\EmailService.SendGrid.csproj", "{09B8A028-A7A0-48A9-9F43-72046B0F56F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SendGrid", "EmailService.SendGrid\EmailService.SendGrid.csproj", "{09B8A028-A7A0-48A9-9F43-72046B0F56F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendGridEmailService.Test", "SendGridEmailService.Test\SendGridEmailService.Test.csproj", "{BADF134D-BC4F-4A09-A7D6-E23C5006E443}"
 EndProject
