@@ -26,8 +26,10 @@ namespace SendGridEmailService.Test.Controllers
                 To = new List<string>(),
                 Body = "",
                 Subject = "",
-                IsBodyHTML = true
-            })e.Wait();
+                IsBodyHTML = true,
+                CC = new List<string>(),
+                BCC = new List<string>()
+            }).Wait();
         }
 
         public IActionResult Index()

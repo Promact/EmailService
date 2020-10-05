@@ -31,6 +31,16 @@ namespace SendGridEmailService
 
             sendGridMessage.AddTos(mail.To.Select(x => new EmailAddress(x)).ToList());
 
+            if (mail.CC != null)
+            {
+                sendGridMessage.AddCcs(mail.CC.Select(x => new EmailAddress(x)).ToList());
+            }
+
+            if (mail.BCC != null)
+            {
+                sendGridMessage.AddBccs(mail.BCC.Select(x => new EmailAddress(x)).ToList());
+            }
+
             sendGridMessage.Subject = mail.Subject;
 
             if (mail.IsBodyHTML)

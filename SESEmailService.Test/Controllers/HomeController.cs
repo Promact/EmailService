@@ -26,7 +26,9 @@ namespace SESEmailService.Test.Controllers
                 To = new List<string>(),
                 Body = "",
                 Subject = "",
-                IsBodyHTML = true
+                IsBodyHTML = true,
+                CC = new List<string>(),
+                BCC = new List<string>()
             }).Wait();
         }
 

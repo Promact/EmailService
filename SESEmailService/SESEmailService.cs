@@ -29,10 +29,19 @@ namespace SESEmailService
 
                 sendRequest.Source = mail.From;
 
-                sendRequest.Destination = new Destination
+                sendRequest.Destination = new Destination();
+
+                sendRequest.Destination.ToAddresses = mail.To;
+
+                if (mail.CC != null)
                 {
-                    ToAddresses = mail.To
-                };
+                    sendRequest.Destination.CcAddresses = mail.CC;
+                }
+
+                if(mail.BCC != null)
+                {
+                    sendRequest.Destination.BccAddresses = mail.BCC;
+                }
 
                 sendRequest.Message = new Message();
                 
