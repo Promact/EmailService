@@ -20,16 +20,28 @@ namespace SESEmailService.Test.Controllers
             _logger = logger;
             _emailService = emailService;
 
-            _emailService.SendEmailAsync(new Mail()
-            {
-                From = "",
-                To = new List<string>(),
-                Body = "",
-                Subject = "",
-                IsBodyHTML = true,
-                CC = new List<string>(),
-                BCC = new List<string>()
-            }).Wait();
+            var mail = new Mail(
+                    to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Recipient Name") },
+                    from: new EmailAddress("prakharagrawal@promactinfo.com", "Sender Name"),
+                    subject: "Greeting",
+                    body: "Hi Prakhar "
+                );
+
+            _emailService.SendEmailAsync(mail).Wait();
+
+
+
+
+            var templatedEmailRequest = new TemplatedEmailRequest(
+                 to: new List<EmailAddress> { new EmailAddress("prakharagrawal@promactinfo.com", "Prakhar Agrawal") },
+                 from: new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar"),
+                 templateNameOrId: "HelloMail", // Replace with your actual template name or ID
+                 templateData: new { name = "Value1", favoriteanimal = "Value2" } // Replace with your actual template data
+             );
+
+            _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
+
+            _logger.LogInformation("Templated email sent successfully from the constructor. Hooray!");
         }
 
         public IActionResult Index()

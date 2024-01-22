@@ -3,6 +3,11 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using EmailService;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace SESEmailService
@@ -25,50 +30,59 @@ namespace SESEmailService
         {
             using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
             {
-                var sendRequest = new SendEmailRequest();
-
-                sendRequest.Source = mail.From;
-
-                sendRequest.Destination = new Destination();
-
-                sendRequest.Destination.ToAddresses = mail.To;
-
-                if (mail.CC != null)
+                var sendRequest = new SendEmailRequest
                 {
-                    sendRequest.Destination.CcAddresses = mail.CC;
-                }
-
-                if(mail.BCC != null)
-                {
-                    sendRequest.Destination.BccAddresses = mail.BCC;
-                }
-
-                sendRequest.Message = new Message();
-                
-                sendRequest.Message.Subject = new Content(mail.Subject);
-                
-                sendRequest.Message.Body = new Body();
-
-                if (mail.IsBodyHTML)
-                {
-                    sendRequest.Message.Body.Html = new Content
+                    Source = $"{mail.From.Name} <{mail.From.Email}>",
+                    Message = new Message
                     {
-                        Charset = "UTF-8",
-                        Data = mail.Body
-                    };
-                }
+                        Body = new Body { Html = new Content { Data = mail.Body } },
+                        Subject = new Content { Data = mail.Subject },
+                        Attachments = new List<Attachment> { attachment }
+                    },
+                    Destination = new Destination { ToAddresses = new List<string>() }
+                };
+                sendRequest.Destination.ToAddresses.AddRange(mail.To.Select(x => x.Email));
 
-                else
-                {
-                    sendRequest.Message.Body.Text = new Content
-                    {
-                        Charset = "UTF-8",
-                        Data = mail.Body
-                    };
-                }   
+
 
                 await client.SendEmailAsync(sendRequest);
             }
         }
+
+        public async Task SendTemplatedEmailAsync(TemplatedEmailRequest templatedEmailRequest)
+        {
+            try
+            {
+                using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
+                {
+                    var sendRequest = new SendTemplatedEmailRequest
+                    {
+                        Source = $"{templatedEmailRequest.From.Name} <{templatedEmailRequest.From.Email}>",
+                        Template = templatedEmailRequest.TemplateNameOrId,
+                        TemplateData = JsonConvert.SerializeObject(templatedEmailRequest.TemplateData),
+                        Destination = new Destination { ToAddresses = new List<string>() }
+                    };
+
+                    sendRequest.Destination.ToAddresses.AddRange(templatedEmailRequest.To.Select(x => x.Email));
+                    Console.WriteLine("Hi");
+                    await client.SendTemplatedEmailAsync(sendRequest);
+                }
+            }
+            catch (AmazonSimpleEmailServiceException ex)
+            {
+                // Handle Amazon SES specific exceptions
+                // Log or handle the exception as needed
+                Console.WriteLine($"Amazon SES Exception: {ex.Message}");
+                throw; // You may choose to handle, log, or rethrow the exception
+            }
+            catch (Exception ex)
+            {
+                // Handle general exceptions
+                // Log or handle the exception as needed
+                Console.WriteLine($"Exception: {ex.Message}");
+                throw; // You may choose to handle, log, or rethrow the exception
+            }
+        }
+
     }
 }
