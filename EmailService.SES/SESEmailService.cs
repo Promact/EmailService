@@ -3,9 +3,11 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using EmailService;
 using Microsoft.Extensions.Options;
+using MimeKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -28,26 +30,83 @@ namespace SESEmailService
 
         public async Task SendEmailAsync(Mail mail)
         {
-            using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
+            try
             {
-                var sendRequest = new SendEmailRequest
+                using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
                 {
-                    Source = $"{mail.From.Name} <{mail.From.Email}>",
-                    Message = new Message
+                    var sendRequest = new SendEmailRequest
                     {
-                        Body = new Body { Html = new Content { Data = mail.Body } },
-                        Subject = new Content { Data = mail.Subject },
-                        Attachments = new List<Attachment> { attachment }
-                    },
-                    Destination = new Destination { ToAddresses = new List<string>() }
-                };
-                sendRequest.Destination.ToAddresses.AddRange(mail.To.Select(x => x.Email));
+                        Source = $"{mail.From.Name} <{mail.From.Email}>",
+                        Message = new Message
+                        {
+                            Body = new Body { Html = new Content { Data = mail.Body } },
+                            Subject = new Content { Data = mail.Subject },
+                        },
+                        Destination = new Destination { ToAddresses = mail.To.Select(x => x.Email).ToList() }
+                    };
 
+                    if (mail.Attachments != null && mail.Attachments.Any())
+                    {
+                        var messageWithAttachments = new SendRawEmailRequest
+                        {
+                            Source = sendRequest.Source,
+                            Destinations = sendRequest.Destination.ToAddresses,
+                            RawMessage = new RawMessage
+                            {
+                                Data = CreateRawMessage(mail)
+                            }
+                        };
 
-
-                await client.SendEmailAsync(sendRequest);
+                        await client.SendRawEmailAsync(messageWithAttachments);
+                    }
+                    else
+                    {
+                        sendRequest.Destination.ToAddresses.AddRange(mail.To.Select(x => x.Email));
+                        await client.SendEmailAsync(sendRequest);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+  
+                Console.WriteLine($"An error occurred while sending the email: {ex.Message}");
+      
             }
         }
+
+        private static MemoryStream CreateRawMessage(Mail mail)
+        {
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
+                message.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                message.Subject = mail.Subject;
+
+                var builder = new BodyBuilder();
+                builder.HtmlBody = mail.Body;
+
+                foreach (var attachment in mail.Attachments)
+                {
+                    builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
+                }
+
+                message.Body = builder.ToMessageBody();
+
+                var stream = new MemoryStream();
+                message.WriteTo(stream);
+                stream.Position = 0; // Reset the stream position to the beginning
+
+                return stream;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"An error occurred while creating the raw email message: {ex.Message}");
+                throw; 
+            }
+        }
+
 
         public async Task SendTemplatedEmailAsync(TemplatedEmailRequest templatedEmailRequest)
         {
@@ -70,17 +129,15 @@ namespace SESEmailService
             }
             catch (AmazonSimpleEmailServiceException ex)
             {
-                // Handle Amazon SES specific exceptions
-                // Log or handle the exception as needed
+
                 Console.WriteLine($"Amazon SES Exception: {ex.Message}");
-                throw; // You may choose to handle, log, or rethrow the exception
+                throw; 
             }
             catch (Exception ex)
             {
-                // Handle general exceptions
-                // Log or handle the exception as needed
+
                 Console.WriteLine($"Exception: {ex.Message}");
-                throw; // You may choose to handle, log, or rethrow the exception
+                throw; 
             }
         }
 

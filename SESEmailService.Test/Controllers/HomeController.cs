@@ -20,28 +20,47 @@ namespace SESEmailService.Test.Controllers
             _logger = logger;
             _emailService = emailService;
 
+           //sending an email without attachment
             var mail = new Mail(
-                    to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Recipient Name") },
-                    from: new EmailAddress("prakharagrawal@promactinfo.com", "Sender Name"),
+                    to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },//the mail which we are using should be verified in AWS Identites
+                    from: new EmailAddress("prakharagrawal@promactinfo.com", "Rishabh Dev"),
                     subject: "Greeting",
-                    body: "Hi Prakhar "
+                    body: "Hi Prakhar Bhai"
                 );
 
-            _emailService.SendEmailAsync(mail).Wait();
+            _emailService.SendEmailAsync(mail);
 
-
-
-
+            //sending an email with Template
             var templatedEmailRequest = new TemplatedEmailRequest(
                  to: new List<EmailAddress> { new EmailAddress("prakharagrawal@promactinfo.com", "Prakhar Agrawal") },
                  from: new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar"),
-                 templateNameOrId: "HelloMail", // Replace with your actual template name or ID
+                 templateNameOrId: "ModifiedTemplate", // Replace with your actual template name or ID
                  templateData: new { name = "Value1", favoriteanimal = "Value2" } // Replace with your actual template data
              );
-
             _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
 
-            _logger.LogInformation("Templated email sent successfully from the constructor. Hooray!");
+            // Sending an email with attachments
+            var attachmentMail = new Mail(
+                to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },
+                from: new EmailAddress("prakharagrawal@promactinfo.com", "Rishabh Dev"),
+                subject: "Email with Attachments",
+                body: "Hi Prakhar "
+            );
+
+            // Add attachments
+            attachmentMail.Attachments.Add(new AttachmentData(
+               content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
+                fileName: "Progress Updated @12_01 - Sheet1.pdf",
+                contentType: "application/pdf"
+            ));
+            // Add attachments
+            attachmentMail.Attachments.Add(new AttachmentData(
+               content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
+                fileName: "Progress Sheet1.pdf",
+                contentType: "application/pdf"
+            ));
+            _emailService.SendEmailAsync(attachmentMail);
+
         }
 
         public IActionResult Index()

@@ -15,25 +15,19 @@ namespace EmailService
 
         public List<EmailAddress> To { get; set; }
 
-        public List<AttachmentData>? Attachments { get; set; }
-
-
+        public List<AttachmentData>? Attachments { get; set; } = new List<AttachmentData>(); // Initialize with an empty list
 
     }
 
     public class Mail : EMail
     {
- 
-
-        public Mail(List<EmailAddress> to, EmailAddress from, string subject, string body) : base(to, from)
+        public Mail(List<EmailAddress> to, EmailAddress from, string subject, string body, List<AttachmentData>? attachments = null) : base(to, from)
         {
             Body = body;
             Subject = subject;
+            Attachments = attachments ?? new List<AttachmentData>(); // Initialize with an empty list if null
         }
 
-        /// <summary>
-        /// HTML of email to be sent.
-        /// </summary>
         public string Body { get; set; }
 
         public string Subject { get; set; }
