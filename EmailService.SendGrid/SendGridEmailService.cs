@@ -1,7 +1,9 @@
 ﻿using EmailService;
 using Microsoft.Extensions.Options;
 using SendGrid;
+using SendGrid.Helpers.Errors.Model;
 using SendGrid.Helpers.Mail;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,37 +25,80 @@ namespace SendGridEmailService
 
         public async Task SendEmailAsync(Mail mail)
         {
-            var sendGridClient = new SendGridClient(_sendGridOptions.APIKey);
-
-            var sendGridMessage = new SendGridMessage();
-
-            sendGridMessage.From = new EmailAddress(mail.From);
-
-            sendGridMessage.AddTos(mail.To.Select(x => new EmailAddress(x)).ToList());
-
-            if (mail.CC != null)
+            try
             {
-                sendGridMessage.AddCcs(mail.CC.Select(x => new EmailAddress(x)).ToList());
-            }
+                var sendGridClient = new SendGridClient(_sendGridOptions.APIKey);
 
-            if (mail.BCC != null)
+                var sendGridMessage = new SendGridMessage
+                {
+                    From = new SendGrid.Helpers.Mail.EmailAddress(mail.From.Email, mail.From.Name),
+                    Subject = mail.Subject,
+                    PlainTextContent = mail.Body, // Assuming you have a plain text body
+                    HtmlContent = mail.Body // Assuming you have an HTML body
+                };
+
+                sendGridMessage.AddTos(mail.To.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+
+                // Additional options can be set here, like attachments, headers, etc.
+                if (mail.Attachments != null && mail.Attachments.Any())
+                {
+                    foreach (var item in mail.Attachments)
+                    {
+                        sendGridMessage.AddAttachment(item.FileName, Convert.ToBase64String(item.Content), item.ContentType);
+                    }
+                }
+
+                await sendGridClient.SendEmailAsync(sendGridMessage);
+            }
+            catch (SendGridInternalException ex)
             {
-                sendGridMessage.AddBccs(mail.BCC.Select(x => new EmailAddress(x)).ToList());
+                Console.WriteLine($"Exception: {ex.Message}");
             }
-
-            sendGridMessage.Subject = mail.Subject;
-
-            if (mail.IsBodyHTML)
+            catch (Exception ex)
             {
-                sendGridMessage.HtmlContent = mail.Body;
-            }
 
-            else
-            {
-                sendGridMessage.PlainTextContent = mail.Body;
+                Console.WriteLine($"Exception: {ex.Message}");
             }
-
-            await sendGridClient.SendEmailAsync(sendGridMessage);
         }
+
+        public async Task SendTemplatedEmailAsync(TemplatedEmailRequest templatedEmailRequest)
+        {
+            try
+            {
+                var sendGridClient = new SendGridClient(_sendGridOptions.APIKey);
+                var message = new SendGridMessage
+                {
+                    From = new SendGrid.Helpers.Mail.EmailAddress(templatedEmailRequest.From.Email, templatedEmailRequest.From.Name),
+                };
+
+                message.SetTemplateId(templatedEmailRequest.TemplateNameOrId);
+                message.SetTemplateData(templatedEmailRequest.TemplateData);
+
+                templatedEmailRequest.To.ForEach(emailAddress =>
+                {
+                    message.AddTo(new SendGrid.Helpers.Mail.EmailAddress(emailAddress.Email, emailAddress.Name));
+                });
+
+                if (templatedEmailRequest.Attachments != null && templatedEmailRequest.Attachments.Any())
+                {
+                    foreach (var item in templatedEmailRequest.Attachments)
+                    {
+                        message.AddAttachment(item.FileName, Convert.ToBase64String(item.Content), item.ContentType);
+                    }
+                }
+
+                await sendGridClient.SendEmailAsync(message);
+            }
+            catch (SendGridInternalException ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+        }
+
     }
 }
