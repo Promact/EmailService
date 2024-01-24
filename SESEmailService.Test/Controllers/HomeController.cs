@@ -22,17 +22,17 @@ namespace SESEmailService.Test.Controllers
 
             // The mail which we are using should be verified in AWS Identities
             var mail = new Mail(
-                    to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
-                    from: new EmailAddress("SenderEmail", "Sender Name"),  
-                    subject: "Subject",
-                    body: "Content"
+                to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                from: new EmailAddress("SenderEmail", "Sender Name"),
+                subject: "Subject",
+                body: "Content"
                 );
 
-            //// Add attachments
+            // Add attachments
             mail.Attachments.Add(new AttachmentData(
-               content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+                content: System.IO.File.ReadAllBytes("path/to/file.txt"),
                 fileName: "FileName",
-                contentType: "fileType"
+                contentType: "FileType"
             ));
 
             _emailService.SendEmailAsync(mail);
@@ -43,11 +43,18 @@ namespace SESEmailService.Test.Controllers
                  to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
                  from: new EmailAddress("SenderEmail", "Sender Name"),
                  templateNameOrId: "TemplateID", // Replace with your actual template name or ID
-                 templateData: new { name = "Value1" } // Replace with your actual template data
+                 templateData: new { name = "Value1" }, // Replace with your actual template data            
+                 subject: ""
              );
 
-            _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
+            // Add attachments
+            templatedEmailRequest.Attachments.Add(new AttachmentData(
+                content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+                fileName: "FileName",
+                contentType: "FileType"
+            ));
 
+            _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
         }
 
         public IActionResult Index()

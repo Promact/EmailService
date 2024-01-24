@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Handlebars.Net" Version="2.1.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.300.39" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />

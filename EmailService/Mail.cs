@@ -35,10 +35,12 @@ namespace EmailService
 
     public class TemplatedEmailRequest : EMail
     {
-        public TemplatedEmailRequest(List<EmailAddress> to, EmailAddress from, string templateNameOrId, dynamic templateData) : base(to, from)
+        public TemplatedEmailRequest(List<EmailAddress> to, EmailAddress from, string templateNameOrId, dynamic templateData, string subject, List<AttachmentData>? attachments = null) : base(to, from)
         {
             TemplateNameOrId = templateNameOrId;
             TemplateData = templateData;
+            Subject = subject;
+            Attachments = attachments ?? new List<AttachmentData>();
         }
 
         /// <summary>
@@ -54,6 +56,9 @@ namespace EmailService
         /// </summary>
         public dynamic TemplateData { get; set; }
 
+        public string Body { get; set; }
+
+        public string Subject { get; set; }
     }
     public class EmailAddress
     {

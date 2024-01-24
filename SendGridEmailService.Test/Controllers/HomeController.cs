@@ -42,7 +42,8 @@ namespace SendGridEmailService.Test.Controllers
                  to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
                  from: new EmailAddress("SenderEmail", "Sender Name"),
                  templateNameOrId: "TemplateID", // Replace with your actual template name or ID
-                 templateData: new { name = "Value1" } // Replace with your actual template data
+                 templateData: new { name = "Value1" }, // Replace with your actual template data            
+                 subject:""
              );
 
             //Add attachments
