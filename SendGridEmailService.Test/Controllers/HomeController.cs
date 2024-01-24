@@ -20,34 +20,36 @@ namespace SendGridEmailService.Test.Controllers
             _logger = logger;
             _emailService = emailService;
 
+            //the email which we are using should be verified In SEND GRID
             var mail = new Mail(
-                 to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },//the mail which we are using should be verified in AWS Identites
-                 from: new EmailAddress("prakharagrawal@promactinfo.com", "Rishabh Dev"),
-                 subject: "Greeting",
-                 body: "Hi Prakhar Bhai"
+                 to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 from: new EmailAddress("SenderEmail", "Sender Name"),
+                 subject: "Subject",
+                 body: "Content"
              );
 
             // Add attachments
             mail.Attachments.Add(new AttachmentData(
-               content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
-                fileName: "Progress Updated @12_01 - Sheet1.pdf",
-                contentType: "application/pdf"
+               content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+                fileName: "FileName",
+                contentType: "FileType"
             ));
 
             _emailService.SendEmailAsync(mail);
 
-           // sending an email with Template
+            // sending an email with Template
             var templatedEmailRequest = new TemplatedEmailRequest(
-                 to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },
-                 from: new EmailAddress("prakharagrawal@promactinfo.com", "Prakhar"),
-                 templateNameOrId: "d-1ee30ec9b1f1495a8c0f8edf4cd8c7b4", // Replace with your actual template name or ID
+                 to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 from: new EmailAddress("SenderEmail", "Sender Name"),
+                 templateNameOrId: "TemplateID", // Replace with your actual template name or ID
                  templateData: new { name = "Value1" } // Replace with your actual template data
              );
 
+            //Add attachments
             templatedEmailRequest.Attachments.Add(new AttachmentData(
-           content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
-            fileName: "Progress Updated @12_01 - Sheet1.pdf",
-            contentType: "application/pdf"
+                content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+                fileName: "FileName",
+                contentType: "FileType"
               ));
 
             _emailService.SendTemplatedEmailAsync(templatedEmailRequest);

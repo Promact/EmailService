@@ -20,46 +20,33 @@ namespace SESEmailService.Test.Controllers
             _logger = logger;
             _emailService = emailService;
 
-           //sending an email without attachment
+            // The mail which we are using should be verified in AWS Identities
             var mail = new Mail(
-                    to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },//the mail which we are using should be verified in AWS Identites
-                    from: new EmailAddress("prakharagrawal@promactinfo.com", "Rishabh Dev"),
-                    subject: "Greeting",
-                    body: "Hi Prakhar Bhai"
+                    to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                    from: new EmailAddress("SenderEmail", "Sender Name"),  
+                    subject: "Subject",
+                    body: "Content"
                 );
+
+            //// Add attachments
+            mail.Attachments.Add(new AttachmentData(
+               content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+                fileName: "FileName",
+                contentType: "fileType"
+            ));
 
             _emailService.SendEmailAsync(mail);
 
+
             //sending an email with Template
             var templatedEmailRequest = new TemplatedEmailRequest(
-                 to: new List<EmailAddress> { new EmailAddress("prakharagrawal@promactinfo.com", "Prakhar Agrawal") },
-                 from: new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar"),
-                 templateNameOrId: "ModifiedTemplate", // Replace with your actual template name or ID
-                 templateData: new { name = "Value1", favoriteanimal = "Value2" } // Replace with your actual template data
+                 to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 from: new EmailAddress("SenderEmail", "Sender Name"),
+                 templateNameOrId: "TemplateID", // Replace with your actual template name or ID
+                 templateData: new { name = "Value1" } // Replace with your actual template data
              );
+
             _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
-
-            // Sending an email with attachments
-            var attachmentMail = new Mail(
-                to: new List<EmailAddress> { new EmailAddress("agrawalprakhar893@gmail.com", "Prakhar Agrawal") },
-                from: new EmailAddress("prakharagrawal@promactinfo.com", "Rishabh Dev"),
-                subject: "Email with Attachments",
-                body: "Hi Prakhar "
-            );
-
-            // Add attachments
-            attachmentMail.Attachments.Add(new AttachmentData(
-               content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
-                fileName: "Progress Updated @12_01 - Sheet1.pdf",
-                contentType: "application/pdf"
-            ));
-            // Add attachments
-            attachmentMail.Attachments.Add(new AttachmentData(
-               content: System.IO.File.ReadAllBytes("C:/Users/admin/Downloads/Progress Updated @12_01 - Sheet1.pdf"),
-                fileName: "Progress Sheet1.pdf",
-                contentType: "application/pdf"
-            ));
-            _emailService.SendEmailAsync(attachmentMail);
 
         }
 
