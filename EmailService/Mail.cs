@@ -9,23 +9,33 @@ namespace EmailService
         {
             To = to;
             From = from;
-          
+            CC = new List<EmailAddress>();
+            BCC = new List<EmailAddress>();
+
         }
         public EmailAddress From { get; set; }
 
         public List<EmailAddress> To { get; set; }
 
-        public List<AttachmentData>? Attachments { get; set; } = new List<AttachmentData>(); // Initialize with an empty list
+        public List<EmailAddress> CC { get; set; }
+        public List<EmailAddress> BCC { get; set; }
+
+        public List<AttachmentData>? Attachments { get; set; } = new List<AttachmentData>(); 
+
+        public bool IsBodyHTML { get; set; }
 
     }
 
     public class Mail : EMail
     {
-        public Mail(List<EmailAddress> to, EmailAddress from, string subject, string body, List<AttachmentData>? attachments = null) : base(to, from)
+        public Mail(List<EmailAddress> to, EmailAddress from, string subject, bool isBodyHtml, string body, List<EmailAddress>? cc = null, List<EmailAddress>? bcc = null, List<AttachmentData>? attachments = null) : base(to, from)
         {
             Body = body;
             Subject = subject;
-            Attachments = attachments ?? new List<AttachmentData>(); // Initialize with an empty list if null
+            IsBodyHTML = isBodyHtml;
+            CC = cc ?? new List<EmailAddress>();
+            BCC = bcc ?? new List<EmailAddress>();
+            Attachments = attachments ?? new List<AttachmentData>(); 
         }
 
         public string Body { get; set; }
@@ -35,11 +45,13 @@ namespace EmailService
 
     public class TemplatedEmailRequest : EMail
     {
-        public TemplatedEmailRequest(List<EmailAddress> to, EmailAddress from, string templateNameOrId, dynamic templateData, string subject, List<AttachmentData>? attachments = null) : base(to, from)
+        public TemplatedEmailRequest(List<EmailAddress> to, EmailAddress from, string templateNameOrId, dynamic templateData, string subject = "", List<EmailAddress>? cc = null, List<EmailAddress>? bcc = null, List<AttachmentData>? attachments = null) : base(to, from)
         {
             TemplateNameOrId = templateNameOrId;
             TemplateData = templateData;
             Subject = subject;
+            CC = cc ?? new List<EmailAddress>();
+            BCC = bcc ?? new List<EmailAddress>();
             Attachments = attachments ?? new List<AttachmentData>();
         }
 
@@ -60,6 +72,7 @@ namespace EmailService
 
         public string Subject { get; set; }
     }
+
     public class EmailAddress
     {
         public EmailAddress(string email, string name)

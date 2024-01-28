@@ -33,11 +33,30 @@ namespace SendGridEmailService
                 {
                     From = new SendGrid.Helpers.Mail.EmailAddress(mail.From.Email, mail.From.Name),
                     Subject = mail.Subject,
-                    PlainTextContent = mail.Body, // Assuming you have a plain text body
-                    HtmlContent = mail.Body // Assuming you have an HTML body
                 };
 
+                if (mail.IsBodyHTML)
+                {
+                    sendGridMessage.HtmlContent = mail.Body;
+                }
+
+                else
+                {
+                    sendGridMessage.PlainTextContent = mail.Body;
+                }
+
                 sendGridMessage.AddTos(mail.To.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+
+                // Add CC and BCC recipients
+                if (mail.CC != null && mail.CC.Any())
+                {
+                    sendGridMessage.AddCcs(mail.CC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                }
+
+                if (mail.BCC != null && mail.BCC.Any())
+                {
+                    sendGridMessage.AddBccs(mail.BCC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                }
 
                 // Additional options can be set here, like attachments, headers, etc.
                 if (mail.Attachments != null && mail.Attachments.Any())
@@ -78,6 +97,18 @@ namespace SendGridEmailService
                 {
                     message.AddTo(new SendGrid.Helpers.Mail.EmailAddress(emailAddress.Email, emailAddress.Name));
                 });
+
+                // Add CC and BCC recipients
+                if (templatedEmailRequest.CC != null && templatedEmailRequest.CC.Any())
+                {
+                    message.AddCcs(templatedEmailRequest.CC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                }
+
+                if (templatedEmailRequest.BCC != null && templatedEmailRequest.BCC.Any())
+                {
+                    message.AddBccs(templatedEmailRequest.BCC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                }
+
 
                 if (templatedEmailRequest.Attachments != null && templatedEmailRequest.Attachments.Any())
                 {

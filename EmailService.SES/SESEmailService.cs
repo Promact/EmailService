@@ -36,43 +36,25 @@ namespace SESEmailService
             {
                 using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
                 {
-                    var sendRequest = new SendEmailRequest
+                    var messageRequest = new SendRawEmailRequest
                     {
                         Source = $"{mail.From.Name} <{mail.From.Email}>",
-                        Message = new Message
+                        Destinations = mail.To.Select(x => x.Email).ToList()
+                            .Concat(mail.CC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                            .Concat(mail.BCC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                            .ToList(),
+                        RawMessage = new RawMessage
                         {
-                            Body = new Body { Html = new Content { Data = mail.Body } },
-                            Subject = new Content { Data = mail.Subject },
-                        },
-                        Destination = new Destination { ToAddresses = mail.To.Select(x => x.Email).ToList() }
+                            Data = CreateRawMessage(mail)
+                        }
                     };
 
-                    if (mail.Attachments != null && mail.Attachments.Any())
-                    {
-                        var messageWithAttachments = new SendRawEmailRequest
-                        {
-                            Source = sendRequest.Source,
-                            Destinations = sendRequest.Destination.ToAddresses,
-                            RawMessage = new RawMessage
-                            {
-                                Data = CreateRawMessage(mail)
-                            }
-                        };
-
-                        await client.SendRawEmailAsync(messageWithAttachments);
-                    }
-                    else
-                    {
-                        sendRequest.Destination.ToAddresses.AddRange(mail.To.Select(x => x.Email));
-                        await client.SendEmailAsync(sendRequest);
-                    }
+                    await client.SendRawEmailAsync(messageRequest);
                 }
             }
             catch (Exception ex)
             {
-  
                 Console.WriteLine($"An error occurred while sending the email: {ex.Message}");
-      
             }
         }
 
@@ -83,14 +65,36 @@ namespace SESEmailService
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
                 message.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                // Add CC recipients if available
+                if (mail.CC != null && mail.CC.Any())
+                {
+                    message.Cc.AddRange(mail.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                }
+
+                // Add BCC recipients if available
+                if (mail.BCC != null && mail.BCC.Any())
+                {
+                    message.Bcc.AddRange(mail.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                }
+
                 message.Subject = mail.Subject;
 
                 var builder = new BodyBuilder();
-                builder.HtmlBody = mail.Body;
-
-                foreach (var attachment in mail.Attachments)
+                if (mail.IsBodyHTML)
                 {
-                    builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
+                    builder.HtmlBody = mail.Body;
+                }
+                else
+                {
+                    builder.TextBody = mail.Body;
+                }
+
+                if (mail.Attachments != null && mail.Attachments.Any())
+                {
+                    foreach (var attachment in mail.Attachments)
+                    {
+                        builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
+                    }
                 }
 
                 message.Body = builder.ToMessageBody();
@@ -103,12 +107,10 @@ namespace SESEmailService
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"An error occurred while creating the raw email message: {ex.Message}");
-                throw; 
+                throw;
             }
         }
-
 
         public async Task SendTemplatedEmailAsync(TemplatedEmailRequest templatedEmailRequest)
         {
@@ -123,7 +125,19 @@ namespace SESEmailService
                     var message = new MimeMessage();
                     message.From.Add(new MailboxAddress(templatedEmailRequest.From.Name, templatedEmailRequest.From.Email));
                     message.To.AddRange(templatedEmailRequest.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    // Add CC recipients if available
+                    if (templatedEmailRequest.CC != null && templatedEmailRequest.CC.Any())
+                    {
+                        message.Cc.AddRange(templatedEmailRequest.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    }
+
+                    // Add BCC recipients if available
+                    if (templatedEmailRequest.BCC != null && templatedEmailRequest.BCC.Any())
+                    {
+                        message.Bcc.AddRange(templatedEmailRequest.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    }
                     message.Subject = templatedEmailRequest.Subject;
+
 
                     // Create a body part with the template content
                     var bodyPart = new TextPart("html")
