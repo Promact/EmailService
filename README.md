@@ -8,16 +8,75 @@ private IEmailService _emailService;
 
 public async Task MyMethod()
 {
-    var mailMessage = new Mail();
-    mail.From = "abc@pqr.com";
-    mail.To = new List<string>(){"xyz@domain.com", "lmn@domain.com"};
-    mail.CC = new List<string>(){"xyz1@domain.com", "lmn1@domain.com"};
-    mail.BCC = new List<string>(){"xyz2@domain.com", "lmn2@domain.com"};
-    mail.Subject = "Test subject";
-    mail.Body = "Test body";
-    mail.IsBodyHTML = true;
-    await _emailService.SendEmailAsync(mailMessage);
+    // The mail which we are using should be verified in Service Provider whichever you are using (SES, SendGrid etc.)
+    var mail = new Mail(
+        to: new List<EmailAddress>
+        {
+            new EmailAddress("xyz@domain.com", "Receiver Name"),
+            new EmailAddress("lmn@domain.com", "Receiver Name")
+        },
+        from: new EmailAddress("abc@pqr.com", "Sender Name"),
+        cc: new List<EmailAddress>
+        {
+            new EmailAddress("xyz1@domain.com", "Receiver Name"),
+            new EmailAddress("lmn1@domain.com", "Receiver Name")
+        },
+        bcc: new List<EmailAddress>
+        {
+            new EmailAddress("xyz2@domain.com", "Receiver Name"),
+            new EmailAddress("lmn2@domain.com", "Receiver Name")
+        },
+        subject: "Test subject",
+        body: "Test body",
+        isBodyHtml: true
+    );
+
+    // Add attachments. You can Attach Multiple Attachment
+    mail.Attachments.Add(new AttachmentData
+    {
+        Content = System.IO.File.ReadAllBytes("path/to/file.txt"),
+        FileName = "FileName",
+        ContentType = "FileType"
+    });
+
+    await _emailService.SendEmailAsync(mail);
 }
+
+public async Task SendTemplatedEmail()
+{
+    var templatedEmailRequest = new TemplatedEmailRequest(
+        to: new List<EmailAddress>
+        {
+            new EmailAddress("xyz@domain.com", "Receiver Name"),
+            new EmailAddress("lmn@domain.com", "Receiver Name")
+        },
+        from: new EmailAddress("abc@pqr.com", "Sender Name"),
+        cc: new List<EmailAddress>
+        {
+            new EmailAddress("xyz1@domain.com", "Receiver Name"),
+            new EmailAddress("lmn1@domain.com", "Receiver Name")
+        },
+        bcc: new List<EmailAddress>
+        {
+            new EmailAddress("xyz2@domain.com", "Receiver Name"),
+            new EmailAddress("lmn2@domain.com", "Receiver Name")
+        },
+        templateNameOrId: "TemplateID", // Replace with your actual template name or ID
+        templateData: new { name = "Value1" }, // Replace with your actual template data            
+        subject: "Subject"
+    );
+
+    // Add attachments
+    templatedEmailRequest.Attachments.Add(new AttachmentData
+    {
+        Content = System.IO.File.ReadAllBytes("path/to/file.txt"),
+        FileName = "FileName",
+        ContentType = "FileType"
+    });
+
+    await _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
+}
+
 ```
 
 # SES
@@ -113,6 +172,5 @@ var emailService = new SendGridEmailService(new SendGridOptions(){ });
 ```
 
 #TODO
-- Add attachment support
 - Add Generic SMTP Email service support (Mailkit/System.NET)
 - Setup Github Actions
