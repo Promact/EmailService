@@ -171,6 +171,56 @@ Create new object of SendGridEmailService passing relevant configuration values
 var emailService = new SendGridEmailService(new SendGridOptions(){ });
 ```
 
+# SMTP
+
+Add nuget package
+
+```
+Promact.EmailService.SMTP
+```
+
+## ASP.NET Core projects
+
+Add below in `Startup.cs` inside `ConfigureServices` method
+
+```
+ services.AddSMTPEmailService(options =>
+ {
+     options.Host = configuration.GetSection("SMTP:Host").Value;
+     options.Port = int.Parse(configuration.GetSection("SMTP:Port").Value);
+     options.UserName = configuration.GetSection("SMTP:UserName").Value;
+     options.Password = configuration.GetSection("SMTP:Password").Value;
+ });
+```
+
+Add relevant appsettings.json values
+
+```
+"SMTP": {
+  "Host": "",
+  "Port":,
+  "UserName": "",
+  "Password": ""
+}
+```
+
+Inject `IEmailService` in class constructor from where you want to send emails
+
+```
+public MyClass(IEmailService emailService)
+{
+...
+}
+```
+
+## Console or other type of applications
+
+Create new object of SMTPEmailService passing relevant configuration values
+
+```
+var emailService = new SMTPEmailService(new SMTPOptions(){ });
+```
+
+
 #TODO
-- Add Generic SMTP Email service support (Mailkit/System.NET)
 - Setup Github Actions
