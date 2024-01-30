@@ -71,12 +71,11 @@ namespace SendGridEmailService
             }
             catch (SendGridInternalException ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Exception: {ex.Message}");
+                throw;
             }
         }
 
@@ -122,12 +121,11 @@ namespace SendGridEmailService
             }
             catch (SendGridInternalException ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Exception: {ex.Message}");
+                throw;
             }
         }
 

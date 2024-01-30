@@ -54,7 +54,7 @@ namespace SESEmailService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while sending the email: {ex.Message}");
+                throw;
             }
         }
 
@@ -107,7 +107,6 @@ namespace SESEmailService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while creating the raw email message: {ex.Message}");
                 throw;
             }
         }
@@ -195,12 +194,10 @@ namespace SESEmailService
             }
             catch (AmazonSimpleEmailServiceException ex)
             {
-                Console.WriteLine($"Amazon SES Exception: {ex.Message}");
                 throw;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
                 throw;
             }
         }
