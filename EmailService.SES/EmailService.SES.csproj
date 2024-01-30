@@ -1,30 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageId>Promact.EmailService.SES</PackageId>
-    <Authors>Rushi Soni</Authors>
-    <Product>Promact.EmailService.SES</Product>
-    <Company>Promact Infotech Private Limited</Company>
-    <Description>Email service implementation for sending emails via SES</Description>
-    <RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
-	  <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageId>Promact.EmailService.SES</PackageId>
+		<Authors>Rushi Soni</Authors>
+		<Product>Promact.EmailService.SES</Product>
+		<Company>Promact Infotech Private Limited</Company>
+		<Description>Email service implementation for sending emails via SES</Description>
+		<RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Handlebars.Net" Version="2.1.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.300.39" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
-    <PackageReference Include="MimeKit" Version="4.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	  <ProjectReference Include="..\EmailService\EmailService.csproj">
-		  <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-		  <IncludeAssets>EmailService.dll</IncludeAssets>
-	  </ProjectReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Handlebars.Net" Version="2.1.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.300.39" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
+		<PackageReference Include="MimeKit" Version="4.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<ProjectReference Include="..\EmailService\EmailService.csproj">
+			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+			<IncludeAssets>EmailService.dll</IncludeAssets>
+		</ProjectReference>
+	</ItemGroup>
 	<Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
 		<ItemGroup>
 			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />

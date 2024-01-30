@@ -20,7 +20,7 @@ namespace EmailService
         public List<EmailAddress> CC { get; set; }
         public List<EmailAddress> BCC { get; set; }
 
-        public List<AttachmentData>? Attachments { get; set; } = new List<AttachmentData>(); 
+        public List<AttachmentData>? Attachments { get; set; } = new List<AttachmentData>();
 
         public bool IsBodyHTML { get; set; }
 
@@ -35,7 +35,7 @@ namespace EmailService
             IsBodyHTML = isBodyHtml;
             CC = cc ?? new List<EmailAddress>();
             BCC = bcc ?? new List<EmailAddress>();
-            Attachments = attachments ?? new List<AttachmentData>(); 
+            Attachments = attachments ?? new List<AttachmentData>();
         }
 
         public string Body { get; set; }
