@@ -1,5 +1,5 @@
 # EmailService
-Generic Email service implementation for sending emails via different Email providers (SES, SendGrid etc.)
+Generic Email service implementation for sending emails via different Email providers (SES, SendGrid,SMTP etc.)
 
 # Usage
 
@@ -8,7 +8,7 @@ private IEmailService _emailService;
 
 public async Task MyMethod()
 {
-    // The mail which we are using should be verified in Service Provider whichever you are using (SES, SendGrid etc.)
+    // The mail which we are using should be verified in Service Provider whichever you are using (SES, SendGrid,SMTP etc.)
     var mail = new Mail(
         to: new List<EmailAddress>
         {
@@ -32,12 +32,11 @@ public async Task MyMethod()
     );
 
     // Add attachments. You can Attach Multiple Attachment
-    mail.Attachments.Add(new AttachmentData
-    {
-        Content = System.IO.File.ReadAllBytes("path/to/file.txt"),
-        FileName = "FileName",
-        ContentType = "FileType"
-    });
+    mail.Attachments.Add(new AttachmentData(
+        content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+        fileName: "FileName",
+        contentType: "FileType"
+    ));
 
     await _emailService.SendEmailAsync(mail);
 }
@@ -67,12 +66,11 @@ public async Task SendTemplatedEmail()
     );
 
     // Add attachments
-    templatedEmailRequest.Attachments.Add(new AttachmentData
-    {
-        Content = System.IO.File.ReadAllBytes("path/to/file.txt"),
-        FileName = "FileName",
-        ContentType = "FileType"
-    });
+    templatedEmailRequest.Attachments.Add(new AttachmentData(
+        content: System.IO.File.ReadAllBytes("path/to/file.txt"),
+        fileName: "FileName",
+        contentType: "FileType"
+    ));
 
     await _emailService.SendTemplatedEmailAsync(templatedEmailRequest);
 }
