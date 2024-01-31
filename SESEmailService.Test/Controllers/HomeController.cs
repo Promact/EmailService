@@ -22,10 +22,13 @@ namespace SESEmailService.Test.Controllers
 
             // The mail which we are using should be verified in AWS Identities
             var mail = new Mail(
-                to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
-                from: new EmailAddress("SenderEmail", "Sender Name"),
-                subject: "Subject",
-                body: "Content"
+                 to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 from: new EmailAddress("SenderEmail", "Sender Name"),
+                 cc: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 bcc: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 subject: "Subject",
+                 body: "Content",
+                 isBodyHtml: true
                 );
 
             // Add attachments
@@ -42,6 +45,8 @@ namespace SESEmailService.Test.Controllers
             var templatedEmailRequest = new TemplatedEmailRequest(
                  to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
                  from: new EmailAddress("SenderEmail", "Sender Name"),
+                 cc: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
+                 bcc: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
                  templateNameOrId: "TemplateID", // Replace with your actual template name or ID
                  templateData: new { name = "Value1" }, // Replace with your actual template data            
                  subject: ""
