@@ -1,17 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{BFA28057-EEBA-4B08-98C4-83B2DAA4EE7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService", "EmailService\EmailService.csproj", "{BFA28057-EEBA-4B08-98C4-83B2DAA4EE7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SES", "EmailService.SES\EmailService.SES.csproj", "{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SES", "EmailService.SES\EmailService.SES.csproj", "{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SESEmailService.Test", "SESEmailService.Test\SESEmailService.Test.csproj", "{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SESEmailService.Test", "SESEmailService.Test\SESEmailService.Test.csproj", "{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.SendGrid", "EmailService.SendGrid\EmailService.SendGrid.csproj", "{09B8A028-A7A0-48A9-9F43-72046B0F56F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SendGrid", "EmailService.SendGrid\EmailService.SendGrid.csproj", "{09B8A028-A7A0-48A9-9F43-72046B0F56F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendGridEmailService.Test", "SendGridEmailService.Test\SendGridEmailService.Test.csproj", "{BADF134D-BC4F-4A09-A7D6-E23C5006E443}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendGridEmailService.Test", "SendGridEmailService.Test\SendGridEmailService.Test.csproj", "{BADF134D-BC4F-4A09-A7D6-E23C5006E443}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SMTP", "EmailService.SMTP\EmailService.SMTP.csproj", "{88157C80-7C18-4446-A7C6-AACC7B12056D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMTPEmailService.Test", "SMTPEmailService.Test\SMTPEmailService.Test.csproj", "{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,11 +7,10 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\EmailService.SendGrid\EmailService.SendGrid.csproj" />
+    <ProjectReference Include="..\EmailService\EmailService.csproj" />
   </ItemGroup>
-
-
-
+	
 </Project>

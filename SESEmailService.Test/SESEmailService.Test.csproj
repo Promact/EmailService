@@ -6,13 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Handlebars.Net" Version="2.1.4" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EmailService.SES\EmailService.SES.csproj" />
+    <ProjectReference Include="..\EmailService\EmailService.csproj" />
   </ItemGroup>
-
-
 
 </Project>
