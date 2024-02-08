@@ -62,54 +62,58 @@ namespace SESEmailService
         {
             try
             {
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
-                message.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
-                // Add CC recipients if available
-                if (mail.CC != null && mail.CC.Any())
+                using (var message = new MimeMessage())
                 {
-                    message.Cc.AddRange(mail.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
-                }
-
-                // Add BCC recipients if available
-                if (mail.BCC != null && mail.BCC.Any())
-                {
-                    message.Bcc.AddRange(mail.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
-                }
-
-                message.Subject = mail.Subject;
-
-                var builder = new BodyBuilder();
-                if (mail.IsBodyHTML)
-                {
-                    builder.HtmlBody = mail.Body;
-                }
-                else
-                {
-                    builder.TextBody = mail.Body;
-                }
-
-                if (mail.Attachments != null && mail.Attachments.Any())
-                {
-                    foreach (var attachment in mail.Attachments)
+                    message.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
+                    message.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    // Add CC recipients if available
+                    if (mail.CC != null && mail.CC.Any())
                     {
-                        builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
+                        message.Cc.AddRange(mail.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    }
+
+                    // Add BCC recipients if available
+                    if (mail.BCC != null && mail.BCC.Any())
+                    {
+                        message.Bcc.AddRange(mail.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    }
+
+                    message.Subject = mail.Subject;
+
+                    var builder = new BodyBuilder();
+                    if (mail.IsBodyHTML)
+                    {
+                        builder.HtmlBody = mail.Body;
+                    }
+                    else
+                    {
+                        builder.TextBody = mail.Body;
+                    }
+
+                    if (mail.Attachments != null && mail.Attachments.Any())
+                    {
+                        foreach (var attachment in mail.Attachments)
+                        {
+                            builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
+                        }
+                    }
+
+                    message.Body = builder.ToMessageBody();
+
+                    using (var stream = new MemoryStream())
+                    {
+                        message.WriteTo(stream);
+                        stream.Position = 0; // Reset the stream position to the beginning
+                        return stream;
                     }
                 }
-
-                message.Body = builder.ToMessageBody();
-
-                var stream = new MemoryStream();
-                message.WriteTo(stream);
-                stream.Position = 0; // Reset the stream position to the beginning
-
-                return stream;
             }
             catch (Exception ex)
             {
                 throw;
             }
         }
+
 
         public async Task SendTemplatedEmailAsync(TemplatedEmailRequest templatedEmailRequest)
         {
