@@ -58,6 +58,11 @@ namespace SESEmailService
             }
         }
 
+        /// <summary>
+        /// Creates a raw email message based on the provided Mail object.
+        /// </summary>
+        /// <param name="mail">The Mail object containing email details such as sender, recipients, subject, body, and attachments.</param>
+        /// <returns>A MemoryStream containing the raw email message.</returns>
         private static MemoryStream CreateRawMessage(Mail mail)
         {
             try
@@ -103,7 +108,7 @@ namespace SESEmailService
                     using (var stream = new MemoryStream())
                     {
                         message.WriteTo(stream);
-                        stream.Position = 0; // Reset the stream position to the beginning
+                        stream.Position = 0;
                         return stream;
                     }
                 }
@@ -140,7 +145,6 @@ namespace SESEmailService
                         message.Bcc.AddRange(templatedEmailRequest.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
                     }
                     message.Subject = templatedEmailRequest.Subject;
-
 
                     // Create a body part with the template content
                     var bodyPart = new TextPart("html")
@@ -206,6 +210,14 @@ namespace SESEmailService
             }
         }
 
+
+        /// <summary>
+        /// Retrieves the content of an email template asynchronously from Amazon SES based on the provided template name.
+        /// </summary>
+        /// <param name="templateName">The name of the template to retrieve.</param>
+        /// <param name="client">The AmazonSimpleEmailServiceClient used to communicate with Amazon SES.</param>
+        /// <param name="templatedEmailRequest">The TemplatedEmailRequest containing data to be substituted into the template.</param>
+        /// <returns>A Task representing the asynchronous operation. The task result contains the content of the email template with dynamic data replaced.</returns>
         private async Task<string> GetEmailTemplateContentAsync(string templateName, AmazonSimpleEmailServiceClient client, TemplatedEmailRequest templatedEmailRequest)
         {
             var request = new GetTemplateRequest
@@ -215,7 +227,7 @@ namespace SESEmailService
 
             var response = await client.GetTemplateAsync(request);
 
-            string templateContent = response.Template.HtmlPart; // Assuming the template contains an HTML part
+            string templateContent = response.Template.HtmlPart;
 
             // Use Handlebars.Net for dynamic template rendering
             var template = Handlebars.Compile(templateContent);
