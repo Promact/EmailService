@@ -7,15 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService", "EmailServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SES", "EmailService.SES\EmailService.SES.csproj", "{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SESEmailService.Test", "SESEmailService.Test\SESEmailService.Test.csproj", "{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SendGrid", "EmailService.SendGrid\EmailService.SendGrid.csproj", "{09B8A028-A7A0-48A9-9F43-72046B0F56F5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendGridEmailService.Test", "SendGridEmailService.Test\SendGridEmailService.Test.csproj", "{BADF134D-BC4F-4A09-A7D6-E23C5006E443}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SMTP", "EmailService.SMTP\EmailService.SMTP.csproj", "{88157C80-7C18-4446-A7C6-AACC7B12056D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMTPEmailService.Test", "SMTPEmailService.Test\SMTPEmailService.Test.csproj", "{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.Test", "EmailService.Test\EmailService.Test.csproj", "{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,26 +27,18 @@ Global
 		{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7510F86-5196-4BB2-A18C-FDCEBBD4A474}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33C5580C-BCDF-4CFB-B6A4-7E6C0B760DA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09B8A028-A7A0-48A9-9F43-72046B0F56F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09B8A028-A7A0-48A9-9F43-72046B0F56F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09B8A028-A7A0-48A9-9F43-72046B0F56F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09B8A028-A7A0-48A9-9F43-72046B0F56F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BADF134D-BC4F-4A09-A7D6-E23C5006E443}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88157C80-7C18-4446-A7C6-AACC7B12056D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A27784D5-8B6A-4D19-85F3-E9164ADA8D1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
