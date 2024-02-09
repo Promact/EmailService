@@ -361,6 +361,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-EmailService.Test/wwwroot/lib/bootstrap/dist/
-EmailService.Test/wwwroot/lib/jquery/dist/
-EmailService.Test/wwwroot/lib/jquery-validation/dist/
+
+**/Properties/launchSettings.json
+
+**/wwwroot/lib/*
+
+**/appsettings.Development.json
