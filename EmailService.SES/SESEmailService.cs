@@ -220,20 +220,31 @@ namespace SESEmailService
         /// <returns>A Task representing the asynchronous operation. The task result contains the content of the email template with dynamic data replaced.</returns>
         private async Task<string> GetEmailTemplateContentAsync(string templateName, AmazonSimpleEmailServiceClient client, TemplatedEmailRequest templatedEmailRequest)
         {
-            var request = new GetTemplateRequest
+            try
             {
-                TemplateName = templateName
-            };
+                var request = new GetTemplateRequest
+                {
+                    TemplateName = templateName
+                };
 
-            var response = await client.GetTemplateAsync(request);
+                var response = await client.GetTemplateAsync(request);
 
-            string templateContent = response.Template.HtmlPart;
+                string templateContent = response.Template.HtmlPart;
 
-            // Use Handlebars.Net for dynamic template rendering
-            var template = Handlebars.Compile(templateContent);
-            var replacedContent = template(templatedEmailRequest.TemplateData);
+                // Use Handlebars.Net for dynamic template rendering
+                var template = Handlebars.Compile(templateContent);
+                var replacedContent = template(templatedEmailRequest.TemplateData);
 
-            return replacedContent;
+                return replacedContent;
+            }
+            catch (AmazonSimpleEmailServiceException ex)
+            {
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                throw; 
+            }
         }
 
     }
