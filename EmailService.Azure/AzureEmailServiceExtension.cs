@@ -1,6 +1,6 @@
 ﻿using EmailService;
 using Microsoft.Extensions.DependencyInjection;
-
+using System;
 
 namespace AzureEmailService
 {
