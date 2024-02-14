@@ -1,5 +1,5 @@
 # EmailService
-Generic Email service implementation for sending emails via different Email providers (SES, SendGrid,SMTP etc.)
+Generic Email service implementation for sending emails via different Email providers (SES, SendGrid,SMTP,Azure etc.)
 
 # Usage
 
@@ -9,6 +9,8 @@ private IEmailService _emailService;
 public async Task MyMethod()
 {
     // The mail which we are using should be verified in Service Provider whichever you are using (SES, SendGrid,SMTP etc.)
+    //In Case Of Azure Your EmailDomain Should be Verified And Connected To Your  Email Communications Services
+
     var mail = new Mail(
         to: new List<EmailAddress>
         {
@@ -219,6 +221,46 @@ Create new object of SMTPEmailService passing relevant configuration values
 var emailService = new SMTPEmailService(new SMTPOptions(){ });
 ```
 
+# Azure
 
-#TODO
-- Setup Github Actions
+Add nuget package
+
+```
+Promact.EmailService.Azure
+```
+
+## ASP.NET Core projects
+
+Add below in `Startup.cs` inside `ConfigureServices` method
+
+```
+services.AddAzureEmailService(options =>
+{
+    options.ConnectionString= Configuration.GetSection("Azure:ConnectionString").Value;
+});
+```
+
+Add relevant appsettings.json values
+
+```
+"Azure": {
+  "ConnectionString": ""
+},
+```
+
+Inject `IEmailService` in class constructor from where you want to send emails
+
+```
+public MyClass(IEmailService emailService)
+{
+...
+}
+```
+
+## Console or other type of applications
+
+Create new object of AzureEmailService passing relevant configuration values
+
+```
+var emailService = new AzureEmailService(new AzureOptions(){ });
+```
