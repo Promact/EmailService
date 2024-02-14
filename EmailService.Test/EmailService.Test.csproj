@@ -7,6 +7,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\EmailService.Azure\EmailService.Azure.csproj" />
 		<ProjectReference Include="..\EmailService.SendGrid\EmailService.SendGrid.csproj" />
 		<ProjectReference Include="..\EmailService.SMTP\EmailService.SMTP.csproj" />
 		<ProjectReference Include="..\EmailService.SES\EmailService.SES.csproj" />

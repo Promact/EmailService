@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.SMTP", "EmailS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.Test", "EmailService.Test\EmailService.Test.csproj", "{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Azure", "EmailService.Azure\EmailService.Azure.csproj", "{AEFC9D3D-107A-487C-BB95-E4D58250D572}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3EB07EE-90D8-4263-9D2E-35F1BEB3B5C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEFC9D3D-107A-487C-BB95-E4D58250D572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEFC9D3D-107A-487C-BB95-E4D58250D572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEFC9D3D-107A-487C-BB95-E4D58250D572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEFC9D3D-107A-487C-BB95-E4D58250D572}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

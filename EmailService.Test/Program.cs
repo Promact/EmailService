@@ -1,6 +1,7 @@
 using SESEmailService;
 using SMTPEmailService;
 using SendGridEmailService;
+using AzureEmailService;
 using Microsoft.Extensions.Configuration;
 
 namespace EmailService.Test
@@ -73,6 +74,13 @@ namespace EmailService.Test
                 services.AddSendGridEmailService(options =>
                 {
                     options.APIKey = Configuration.GetSection("SendGrid:APIKey").Value;
+                });
+            }
+            else if (emailServiceType == "Azure")
+            {
+                services.AddAzureEmailService(options =>
+                {
+                    options.ConnectionString= Configuration.GetSection("Azure:ConnectionString").Value;
                 });
             }
             else
