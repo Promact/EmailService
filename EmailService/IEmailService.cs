@@ -8,9 +8,9 @@ namespace EmailService
         /// <summary>
         /// Sends an email asynchronously using the provided Mail object.
         /// </summary>
-        /// <param name="mail">The Mail object containing email details such as sender, recipients, subject, body, and attachments.</param>
+        /// <param name="email">The Mail object containing email details such as sender, recipients, subject, body, and attachments.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        Task SendEmailAsync(Mail mail);
+        Task SendEmailAsync(Email email);
 
 
         /// <summary>

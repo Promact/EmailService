@@ -3,9 +3,9 @@ using System.Net.Mail;
 
 namespace EmailService
 {
-    public class EMail
+    public class EmailBase
     {
-        public EMail(List<EmailAddress> to, EmailAddress from)
+        public EmailBase(List<EmailAddress> to, EmailAddress from)
         {
             To = to;
             From = from;
@@ -26,9 +26,9 @@ namespace EmailService
 
     }
 
-    public class Mail : EMail
+    public class Email : EmailBase
     {
-        public Mail(List<EmailAddress> to, EmailAddress from, string subject, bool isBodyHtml, string body, List<EmailAddress>? cc = null, List<EmailAddress>? bcc = null, List<AttachmentData>? attachments = null) : base(to, from)
+        public Email(List<EmailAddress> to, EmailAddress from, string subject, bool isBodyHtml, string body, List<EmailAddress>? cc = null, List<EmailAddress>? bcc = null, List<AttachmentData>? attachments = null) : base(to, from)
         {
             Body = body;
             Subject = subject;
@@ -43,7 +43,7 @@ namespace EmailService
         public string Subject { get; set; }
     }
 
-    public class TemplatedEmailRequest : EMail
+    public class TemplatedEmailRequest : EmailBase
     {
         public TemplatedEmailRequest(List<EmailAddress> to, EmailAddress from, string templateNameOrId, dynamic templateData, string subject = "", List<EmailAddress>? cc = null, List<EmailAddress>? bcc = null, List<AttachmentData>? attachments = null) : base(to, from)
         {

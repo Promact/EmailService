@@ -23,7 +23,7 @@ namespace SendGridEmailService
             _sendGridOptions = sendGridOptions.Value;
         }
 
-        public async Task SendEmailAsync(Mail mail)
+        public async Task SendEmailAsync(Email email)
         {
             try
             {
@@ -31,37 +31,37 @@ namespace SendGridEmailService
 
                 var sendGridMessage = new SendGridMessage
                 {
-                    From = new SendGrid.Helpers.Mail.EmailAddress(mail.From.Email, mail.From.Name),
-                    Subject = mail.Subject,
+                    From = new SendGrid.Helpers.Mail.EmailAddress(email.From.Email, email.From.Name),
+                    Subject = email.Subject,
                 };
 
-                if (mail.IsBodyHTML)
+                if (email.IsBodyHTML)
                 {
-                    sendGridMessage.HtmlContent = mail.Body;
+                    sendGridMessage.HtmlContent = email.Body;
                 }
 
                 else
                 {
-                    sendGridMessage.PlainTextContent = mail.Body;
+                    sendGridMessage.PlainTextContent = email.Body;
                 }
 
-                sendGridMessage.AddTos(mail.To.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                sendGridMessage.AddTos(email.To.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
 
                 // Add CC and BCC recipients
-                if (mail.CC != null && mail.CC.Any())
+                if (email.CC != null && email.CC.Any())
                 {
-                    sendGridMessage.AddCcs(mail.CC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                    sendGridMessage.AddCcs(email.CC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
                 }
 
-                if (mail.BCC != null && mail.BCC.Any())
+                if (email.BCC != null && email.BCC.Any())
                 {
-                    sendGridMessage.AddBccs(mail.BCC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
+                    sendGridMessage.AddBccs(email.BCC.Select(x => new SendGrid.Helpers.Mail.EmailAddress(x.Email, x.Name)).ToList());
                 }
 
                 // Additional options can be set here, like attachments, headers, etc.
-                if (mail.Attachments != null && mail.Attachments.Any())
+                if (email.Attachments != null && email.Attachments.Any())
                 {
-                    foreach (var item in mail.Attachments)
+                    foreach (var item in email.Attachments)
                     {
                         sendGridMessage.AddAttachment(item.FileName, Convert.ToBase64String(item.Content), item.ContentType);
                     }

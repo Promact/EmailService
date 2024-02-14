@@ -25,41 +25,41 @@ namespace SMTPEmailService
         {
             _smtpOptions = smtpOptions.Value;
         }
-        public async Task SendEmailAsync(Mail mail)
+        public async Task SendEmailAsync(Email email)
         {
             try
             {
                 using (var mimeMessage = new MimeMessage())
                 {
-                    mimeMessage.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
-                    mimeMessage.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    mimeMessage.From.Add(new MailboxAddress(email.From.Name, email.From.Email));
+                    mimeMessage.To.AddRange(email.To.Select(x => new MailboxAddress(x.Name, x.Email)));
 
-                    if (mail.CC != null && mail.CC.Any())
+                    if (email.CC != null && email.CC.Any())
                     {
-                        mimeMessage.Cc.AddRange(mail.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                        mimeMessage.Cc.AddRange(email.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
                     }
 
                     // Add BCC recipients if available
-                    if (mail.BCC != null && mail.BCC.Any())
+                    if (email.BCC != null && email.BCC.Any())
                     {
-                        mimeMessage.Bcc.AddRange(mail.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                        mimeMessage.Bcc.AddRange(email.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
                     }
 
-                    mimeMessage.Subject = mail.Subject;
+                    mimeMessage.Subject = email.Subject;
 
                     var builder = new BodyBuilder();
-                    if (mail.IsBodyHTML)
+                    if (email.IsBodyHTML)
                     {
-                        builder.HtmlBody = mail.Body;
+                        builder.HtmlBody = email.Body;
                     }
                     else
                     {
-                        builder.TextBody = mail.Body;
+                        builder.TextBody = email.Body;
                     }
 
-                    if (mail.Attachments != null && mail.Attachments.Any())
+                    if (email.Attachments != null && email.Attachments.Any())
                     {
-                        foreach (var attachment in mail.Attachments)
+                        foreach (var attachment in email.Attachments)
                         {
                             builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
                         }

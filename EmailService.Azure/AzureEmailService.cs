@@ -24,47 +24,47 @@ namespace AzureEmailService
             _azureOptions = azureOptions.Value;
         }
 
-        public async Task SendEmailAsync(Mail mail)
+        public async Task SendEmailAsync(Email email)
         {
             EmailClient client = null;
             try
             {
                 client = new EmailClient(_azureOptions.ConnectionString);
                 {
-                    var sender = $"<{mail.From.Email}>";
+                    var sender = $"<{email.From.Email}>";
 
-                    var subject = mail.Subject;
+                    var subject = email.Subject;
 
                     var emailContent = new EmailContent(subject);
 
-                    if (mail.IsBodyHTML)
+                    if (email.IsBodyHTML)
                     {
-                        emailContent.Html = mail.Body;
+                        emailContent.Html = email.Body;
                     }
                     else
                     {
-                        emailContent.PlainText = mail.Body;
+                        emailContent.PlainText = email.Body;
                     }
 
                     var toRecipients = new List<Azure.Communication.Email.EmailAddress>();
-                    foreach (var to in mail.To)
+                    foreach (var to in email.To)
                     {
                         toRecipients.Add(new Azure.Communication.Email.EmailAddress(to.Email, to.Name));
                     }
 
                     var ccRecipients = new List<Azure.Communication.Email.EmailAddress>();
-                    if (mail.CC != null)
+                    if (email.CC != null)
                     {
-                        foreach (var cc in mail.CC)
+                        foreach (var cc in email.CC)
                         {
                             ccRecipients.Add(new Azure.Communication.Email.EmailAddress(cc.Email, cc.Name));
                         }
                     }
 
                     var bccRecipients = new List<Azure.Communication.Email.EmailAddress>();
-                    if (mail.BCC != null)
+                    if (email.BCC != null)
                     {
-                        foreach (var bcc in mail.BCC)
+                        foreach (var bcc in email.BCC)
                         {
                             bccRecipients.Add(new Azure.Communication.Email.EmailAddress(bcc.Email, bcc.Name));
                         }
@@ -76,9 +76,9 @@ namespace AzureEmailService
 
 
                     // Add attachments
-                    if (mail.Attachments != null && mail.Attachments.Any())
+                    if (email.Attachments != null && email.Attachments.Any())
                     {
-                        foreach (var attachment in mail.Attachments)
+                        foreach (var attachment in email.Attachments)
                         {
                             var binaryData = new BinaryData(attachment.Content);
                             var emailAttachment = new EmailAttachment(attachment.FileName, attachment.ContentType, binaryData);

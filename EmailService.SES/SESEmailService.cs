@@ -30,7 +30,7 @@ namespace SESEmailService
             _sesOptions = sesOptions.Value;
         }
 
-        public async Task SendEmailAsync(Mail mail)
+        public async Task SendEmailAsync(Email email)
         {
             try
             {
@@ -38,14 +38,14 @@ namespace SESEmailService
                 {
                     var messageRequest = new SendRawEmailRequest
                     {
-                        Source = $"{mail.From.Name} <{mail.From.Email}>",
-                        Destinations = mail.To.Select(x => x.Email).ToList()
-                            .Concat(mail.CC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
-                            .Concat(mail.BCC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                        Source = $"{email.From.Name} <{email.From.Email}>",
+                        Destinations = email.To.Select(x => x.Email).ToList()
+                            .Concat(email.CC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                            .Concat(email.BCC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
                             .ToList(),
                         RawMessage = new RawMessage
                         {
-                            Data = CreateRawMessage(mail)
+                            Data = CreateRawMessage(email)
                         }
                     };
 
@@ -63,41 +63,41 @@ namespace SESEmailService
         /// </summary>
         /// <param name="mail">The Mail object containing email details such as sender, recipients, subject, body, and attachments.</param>
         /// <returns>A MemoryStream containing the raw email message.</returns>
-        private static MemoryStream CreateRawMessage(Mail mail)
+        private static MemoryStream CreateRawMessage(Email email)
         {
             try
             {
                 using (var message = new MimeMessage())
                 {
-                    message.From.Add(new MailboxAddress(mail.From.Name, mail.From.Email));
-                    message.To.AddRange(mail.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                    message.From.Add(new MailboxAddress(email.From.Name, email.From.Email));
+                    message.To.AddRange(email.To.Select(x => new MailboxAddress(x.Name, x.Email)));
                     // Add CC recipients if available
-                    if (mail.CC != null && mail.CC.Any())
+                    if (email.CC != null && email.CC.Any())
                     {
-                        message.Cc.AddRange(mail.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                        message.Cc.AddRange(email.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
                     }
 
                     // Add BCC recipients if available
-                    if (mail.BCC != null && mail.BCC.Any())
+                    if (email.BCC != null && email.BCC.Any())
                     {
-                        message.Bcc.AddRange(mail.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                        message.Bcc.AddRange(email.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
                     }
 
-                    message.Subject = mail.Subject;
+                    message.Subject = email.Subject;
 
                     var builder = new BodyBuilder();
-                    if (mail.IsBodyHTML)
+                    if (email.IsBodyHTML)
                     {
-                        builder.HtmlBody = mail.Body;
+                        builder.HtmlBody = email.Body;
                     }
                     else
                     {
-                        builder.TextBody = mail.Body;
+                        builder.TextBody = email.Body;
                     }
 
-                    if (mail.Attachments != null && mail.Attachments.Any())
+                    if (email.Attachments != null && email.Attachments.Any())
                     {
-                        foreach (var attachment in mail.Attachments)
+                        foreach (var attachment in email.Attachments)
                         {
                             builder.Attachments.Add(attachment.FileName, attachment.Content, ContentType.Parse(attachment.ContentType));
                         }
