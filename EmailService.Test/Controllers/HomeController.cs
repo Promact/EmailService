@@ -9,13 +9,14 @@ namespace EmailService.Test.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger,IEmailService emailService)
+        public HomeController(ILogger<HomeController> logger, IEmailService emailService)
         {
             _logger = logger;
             _emailService = emailService;
 
-            // The mail which we are using should be verified in AWS Identities
-            var mail = new Mail(
+            // The mail which we are using should be verified in AWS,SMTP,SendGrid etc
+            //In Case of Azure Email Domain Should be verified and Connect your Email Communication Service to Your Domain
+            var email = new Email(
                  to: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
                  from: new EmailAddress("SenderEmail", "Sender Name"),
                  cc: new List<EmailAddress> { new EmailAddress("ReceiverEmail", "Receiver Name") },
@@ -26,13 +27,13 @@ namespace EmailService.Test.Controllers
                 );
 
             // Add attachments
-            mail.Attachments.Add(new AttachmentData(
+            email.Attachments.Add(new AttachmentData(
                 content: System.IO.File.ReadAllBytes("path/to/file.txt"),
                 fileName: "FileName",
                 contentType: "FileType"
             ));
 
-            _emailService.SendEmailAsync(mail);
+            _emailService.SendEmailAsync(email);
 
 
             //sending an email with Template
