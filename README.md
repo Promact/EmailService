@@ -8,10 +8,10 @@ private IEmailService _emailService;
 
 public async Task MyMethod()
 {
-    // The mail which we are using should be verified in Service Provider whichever you are using (SES, SendGrid,SMTP etc.)
+    // The email which we are using should be verified in Service Provider whichever you are using (SES, SendGrid,SMTP etc.)
     //In Case Of Azure Your EmailDomain Should be Verified And Connected To Your  Email Communications Services
 
-    var mail = new Mail(
+    var email = new Email(
         to: new List<EmailAddress>
         {
             new EmailAddress("xyz@domain.com", "Receiver Name"),
@@ -34,13 +34,13 @@ public async Task MyMethod()
     );
 
     // Add attachments. You can Attach Multiple Attachment
-    mail.Attachments.Add(new AttachmentData(
+    email.Attachments.Add(new AttachmentData(
         content: System.IO.File.ReadAllBytes("path/to/file.txt"),
         fileName: "FileName",
         contentType: "FileType"
     ));
 
-    await _emailService.SendEmailAsync(mail);
+    await _emailService.SendEmailAsync(email);
 }
 
 public async Task SendTemplatedEmail()
@@ -243,6 +243,7 @@ services.AddAzureEmailService(options =>
 Add relevant appsettings.json values
 
 ```
+// You can get your connection string From Azure Portal in  Your Communication Service > Setting > Keys.
 "Azure": {
   "ConnectionString": ""
 },
