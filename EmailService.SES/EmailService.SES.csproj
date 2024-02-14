@@ -11,7 +11,7 @@
 		<Description>Email service implementation for sending emails via SES</Description>
 		<RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-		<Version>1.0.2</Version>
+		<Version>2.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
