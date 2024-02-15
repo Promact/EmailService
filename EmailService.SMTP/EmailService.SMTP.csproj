@@ -11,7 +11,6 @@
 		<Description>Email service implementation for sending emails via SMTP</Description>
 		<RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-		<Version>2.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
