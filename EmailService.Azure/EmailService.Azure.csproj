@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	  <PackageId>Promact.EmailService.Azure</PackageId>
+	  <Authors>Rushi Soni</Authors>
+	  <Product>Promact.EmailService.Azure</Product>
+	  <Company>Promact Infotech Private Limited</Company>
+	  <Description>Email service implementation for sending emails via Azure</Description>
+	  <RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
+	  <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+    <PackageReference Include="Azure.Communication.Identity" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
+	<ProjectReference Include="..\EmailService\EmailService.csproj">
+		<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+		<IncludeAssets>EmailService.dll</IncludeAssets>
+	</ProjectReference>
+  </ItemGroup>
+
+	<Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+		</ItemGroup>
+	</Target>
+
+</Project>

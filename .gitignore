@@ -360,3 +360,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+**/Properties/launchSettings.json
+
+**/wwwroot/lib/*
+
+**/appsettings.Development.json
