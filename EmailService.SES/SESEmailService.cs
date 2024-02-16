@@ -18,39 +18,34 @@ namespace SESEmailService
 {
     public class SESEmailService : IEmailService
     {
-        private readonly SESOptions _sesOptions;
+        private readonly IAmazonSimpleEmailService _sesClient;
 
-        public SESEmailService(SESOptions sesOptions)
+        public SESEmailService(IAmazonSimpleEmailService sesClient)
         {
-            _sesOptions = sesOptions;
-        }
-
-        public SESEmailService(IOptions<SESOptions> sesOptions)
-        {
-            _sesOptions = sesOptions.Value;
+            _sesClient = sesClient;
         }
 
         public async Task SendEmailAsync(Email email)
         {
             try
             {
-                using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
-                {
-                    var messageRequest = new SendRawEmailRequest
-                    {
-                        Source = $"{email.From.Name} <{email.From.Email}>",
-                        Destinations = email.To.Select(x => x.Email).ToList()
-                            .Concat(email.CC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
-                            .Concat(email.BCC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
-                            .ToList(),
-                        RawMessage = new RawMessage
-                        {
-                            Data = CreateRawMessage(email)
-                        }
-                    };
 
-                    await client.SendRawEmailAsync(messageRequest);
-                }
+
+                var messageRequest = new SendRawEmailRequest
+                {
+                    Source = $"{email.From.Name} <{email.From.Email}>",
+                    Destinations = email.To.Select(x => x.Email).ToList()
+                        .Concat(email.CC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                        .Concat(email.BCC?.Select(x => x.Email) ?? Enumerable.Empty<string>())
+                        .ToList(),
+                    RawMessage = new RawMessage
+                    {
+                        Data = CreateRawMessage(email)
+                    }
+                };
+
+                await _sesClient.SendRawEmailAsync(messageRequest);
+
             }
             catch (Exception ex)
             {
@@ -124,81 +119,81 @@ namespace SESEmailService
         {
             try
             {
-                using (var client = new AmazonSimpleEmailServiceClient(_sesOptions.AccessKeyId, _sesOptions.SecretAccessKey, RegionEndpoint.GetBySystemName(_sesOptions.Region)))
+
+
+                // Get the HTML body of the email template
+                var templateContent = await GetEmailTemplateContentAsync(templatedEmailRequest.TemplateNameOrId, templatedEmailRequest);
+
+                // Create a MIME message
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(templatedEmailRequest.From.Name, templatedEmailRequest.From.Email));
+                message.To.AddRange(templatedEmailRequest.To.Select(x => new MailboxAddress(x.Name, x.Email)));
+                // Add CC recipients if available
+                if (templatedEmailRequest.CC != null && templatedEmailRequest.CC.Any())
                 {
-                    // Get the HTML body of the email template
-                    var templateContent = await GetEmailTemplateContentAsync(templatedEmailRequest.TemplateNameOrId, client, templatedEmailRequest);
+                    message.Cc.AddRange(templatedEmailRequest.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                }
 
-                    // Create a MIME message
-                    var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress(templatedEmailRequest.From.Name, templatedEmailRequest.From.Email));
-                    message.To.AddRange(templatedEmailRequest.To.Select(x => new MailboxAddress(x.Name, x.Email)));
-                    // Add CC recipients if available
-                    if (templatedEmailRequest.CC != null && templatedEmailRequest.CC.Any())
+                // Add BCC recipients if available
+                if (templatedEmailRequest.BCC != null && templatedEmailRequest.BCC.Any())
+                {
+                    message.Bcc.AddRange(templatedEmailRequest.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                }
+                message.Subject = templatedEmailRequest.Subject;
+
+                // Create a body part with the template content
+                var bodyPart = new TextPart("html")
+                {
+                    Text = templateContent
+                };
+
+                // Create attachment parts if attachments are available
+                if (templatedEmailRequest.Attachments != null && templatedEmailRequest.Attachments.Any())
+                {
+                    var attachmentParts = templatedEmailRequest.Attachments
+                        .Select(attachment => new MimePart
+                        {
+                            Content = new MimeContent(new MemoryStream(attachment.Content), ContentEncoding.Default),
+                            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                            ContentTransferEncoding = ContentEncoding.Base64,
+                            Headers = { { "Content-Type", attachment.ContentType } },
+                            FileName = attachment.FileName
+                        });
+
+                    // Add parts to the MIME message
+                    var multipart = new Multipart("mixed");
+                    multipart.Add(bodyPart);
+                    foreach (var attachmentPart in attachmentParts)
                     {
-                        message.Cc.AddRange(templatedEmailRequest.CC.Select(x => new MailboxAddress(x.Name, x.Email)));
+                        multipart.Add(attachmentPart);
                     }
 
-                    // Add BCC recipients if available
-                    if (templatedEmailRequest.BCC != null && templatedEmailRequest.BCC.Any())
-                    {
-                        message.Bcc.AddRange(templatedEmailRequest.BCC.Select(x => new MailboxAddress(x.Name, x.Email)));
-                    }
-                    message.Subject = templatedEmailRequest.Subject;
+                    message.Body = multipart;
+                }
+                else
+                {
+                    // If no attachments, simply add the body part
+                    message.Body = bodyPart;
+                }
 
-                    // Create a body part with the template content
-                    var bodyPart = new TextPart("html")
+                // Convert the MimeMessage to a stream
+                using (var memoryStream = new MemoryStream())
+                {
+                    await message.WriteToAsync(memoryStream);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    // Set the stream in the send request
+                    var sendRequest = new SendRawEmailRequest
                     {
-                        Text = templateContent
+                        RawMessage = new RawMessage
+                        {
+                            Data = memoryStream
+                        }
                     };
 
-                    // Create attachment parts if attachments are available
-                    if (templatedEmailRequest.Attachments != null && templatedEmailRequest.Attachments.Any())
-                    {
-                        var attachmentParts = templatedEmailRequest.Attachments
-                            .Select(attachment => new MimePart
-                            {
-                                Content = new MimeContent(new MemoryStream(attachment.Content), ContentEncoding.Default),
-                                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-                                ContentTransferEncoding = ContentEncoding.Base64,
-                                Headers = { { "Content-Type", attachment.ContentType } },
-                                FileName = attachment.FileName
-                            });
-
-                        // Add parts to the MIME message
-                        var multipart = new Multipart("mixed");
-                        multipart.Add(bodyPart);
-                        foreach (var attachmentPart in attachmentParts)
-                        {
-                            multipart.Add(attachmentPart);
-                        }
-
-                        message.Body = multipart;
-                    }
-                    else
-                    {
-                        // If no attachments, simply add the body part
-                        message.Body = bodyPart;
-                    }
-
-                    // Convert the MimeMessage to a stream
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await message.WriteToAsync(memoryStream);
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-
-                        // Set the stream in the send request
-                        var sendRequest = new SendRawEmailRequest
-                        {
-                            RawMessage = new RawMessage
-                            {
-                                Data = memoryStream
-                            }
-                        };
-
-                        await client.SendRawEmailAsync(sendRequest);
-                    }
+                    await _sesClient.SendRawEmailAsync(sendRequest);
                 }
+
             }
             catch (AmazonSimpleEmailServiceException ex)
             {
@@ -218,7 +213,7 @@ namespace SESEmailService
         /// <param name="client">The AmazonSimpleEmailServiceClient used to communicate with Amazon SES.</param>
         /// <param name="templatedEmailRequest">The TemplatedEmailRequest containing data to be substituted into the template.</param>
         /// <returns>A Task representing the asynchronous operation. The task result contains the content of the email template with dynamic data replaced.</returns>
-        private async Task<string> GetEmailTemplateContentAsync(string templateName, AmazonSimpleEmailServiceClient client, TemplatedEmailRequest templatedEmailRequest)
+        private async Task<string> GetEmailTemplateContentAsync(string templateName, TemplatedEmailRequest templatedEmailRequest)
         {
             try
             {
@@ -227,7 +222,7 @@ namespace SESEmailService
                     TemplateName = templateName
                 };
 
-                var response = await client.GetTemplateAsync(request);
+                var response = await _sesClient.GetTemplateAsync(request);
 
                 string templateContent = response.Template.HtmlPart;
 
@@ -239,11 +234,11 @@ namespace SESEmailService
             }
             catch (AmazonSimpleEmailServiceException ex)
             {
-                throw; 
+                throw;
             }
             catch (Exception ex)
             {
-                throw; 
+                throw;
             }
         }
 

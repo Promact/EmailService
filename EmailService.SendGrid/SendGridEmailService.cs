@@ -7,28 +7,22 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace SendGridEmailService
 {
     public class SendGridEmailService : IEmailService
     {
-        private readonly SendGridOptions _sendGridOptions;
+        private readonly ISendGridClient _sendGridClient;
 
-        public SendGridEmailService(SendGridOptions sendGridOptions)
+        public SendGridEmailService(ISendGridClient sendGridClient)
         {
-            _sendGridOptions = sendGridOptions;
-        }
-
-        public SendGridEmailService(IOptions<SendGridOptions> sendGridOptions)
-        {
-            _sendGridOptions = sendGridOptions.Value;
+            _sendGridClient = sendGridClient;
         }
 
         public async Task SendEmailAsync(Email email)
         {
             try
             {
-                var sendGridClient = new SendGridClient(_sendGridOptions.APIKey);
-
                 var sendGridMessage = new SendGridMessage
                 {
                     From = new SendGrid.Helpers.Mail.EmailAddress(email.From.Email, email.From.Name),
@@ -67,7 +61,7 @@ namespace SendGridEmailService
                     }
                 }
 
-                await sendGridClient.SendEmailAsync(sendGridMessage);
+                await _sendGridClient.SendEmailAsync(sendGridMessage);
             }
             catch (SendGridInternalException ex)
             {
@@ -83,7 +77,7 @@ namespace SendGridEmailService
         {
             try
             {
-                var sendGridClient = new SendGridClient(_sendGridOptions.APIKey);
+
                 var message = new SendGridMessage
                 {
                     From = new SendGrid.Helpers.Mail.EmailAddress(templatedEmailRequest.From.Email, templatedEmailRequest.From.Name),
@@ -117,7 +111,7 @@ namespace SendGridEmailService
                     }
                 }
 
-                await sendGridClient.SendEmailAsync(message);
+                await _sendGridClient.SendEmailAsync(message);
             }
             catch (SendGridInternalException ex)
             {
