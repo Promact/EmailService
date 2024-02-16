@@ -60,7 +60,7 @@ namespace EmailService.Test
                     options.Password = Configuration.GetSection("SMTP:Password").Value;
                 });
             }
-            else if (emailServiceType == "SES")
+            else if (emailServiceType == "AWS")
             {
                 services.AddSESEmailService(options =>
                 {
