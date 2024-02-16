@@ -10,6 +10,7 @@
 		<Company>Promact Infotech Private Limited</Company>
 		<Description>Email service implementation for sending emails via Different email Provider</Description>
 		<RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
