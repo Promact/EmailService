@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<PackageId>Promact.EmailService.SMTP</PackageId>
+		<PackageId>Promact.EmailService.SMTPS</PackageId>
 		<Authors>Rushi Soni</Authors>
-		<Product>Promact.EmailService.SMTP</Product>
+		<Product>Promact.EmailService.SMTPS</Product>
 		<Company>Promact Infotech Private Limited</Company>
 		<Description>Email service implementation for sending emails via SMTP</Description>
 		<RepositoryUrl>https://github.com/promact/emailservice</RepositoryUrl>
